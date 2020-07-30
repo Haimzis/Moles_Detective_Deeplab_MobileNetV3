@@ -1,0 +1,11 @@
+tflite_convert \
+  --output_file={output_file} \
+  --graph_def_file={graph_def_file} \
+  --input_arrays={input_arrays} \
+  --output_arrays={output_arrays} \
+  --input_shape={input_shape} \
+  --inference_input_type={inference_input_type} \
+  --inference_type={inference_type} \
+  --mean_values={mean_values} \
+  --std_dev_values={std_dev_values}
+

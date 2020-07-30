@@ -1,1 +1,5 @@
 
+[submodule "model"]
+	path = model
+	url = https://github.com/Haimzis/model.git
+	branch = deeplab_v3
