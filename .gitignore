@@ -1,1 +1,9 @@
 .idea
+*.pb
+*.png
+*.tflite
+train_log/*
+my_evaluation/*
+datasets/ISIC2018/*
+datasets/moles_detector/*
+*__pycache__*
