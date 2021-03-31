@@ -16,7 +16,7 @@
 
 """Segmentation results visualization on a given set of images.
 
-See model.py for more details and usage.
+See model_func.py for more details and usage.
 """
 from __future__ import absolute_import
 from __future__ import division

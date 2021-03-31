@@ -15,7 +15,7 @@
 # ==============================================================================
 """Evaluation script for the DeepLab model.
 
-See model.py for more details and usage.
+See model_func.py for more details and usage.
 """
 
 import numpy as np
@@ -26,7 +26,7 @@ from tensorflow.contrib import quantize as contrib_quantize
 from tensorflow.contrib import tfprof as contrib_tfprof
 from tensorflow.contrib import training as contrib_training
 import common
-import model
+import model_func
 from datasets import data_generator
 from datasets import data_paths
 
@@ -37,7 +37,7 @@ flags.DEFINE_string('master', '', 'BNS name of the tensorflow server')
 
 # Settings for log directories.
 flags.DEFINE_string('eval_logdir', './my_evaluation/' + data_paths.ISIC2018_DATASET_NAME, 'Where to write the event logs.')
-flags.DEFINE_string('checkpoint_dir', './train_log/30_07_2020_00_40_45', 'Directory of model checkpoints.')
+flags.DEFINE_string('checkpoint_dir', './train_log/10_09_2020_22_55_10', 'Directory of model checkpoints.')
 
 # Settings for evaluating the model.
 flags.DEFINE_integer('eval_batch_size', 1,
@@ -72,7 +72,7 @@ flags.DEFINE_integer(
 flags.DEFINE_string('dataset', data_paths.ISIC2018_DATASET_NAME,
                     'Name of the segmentation dataset.')
 
-flags.DEFINE_string('eval_split', 'val',
+flags.DEFINE_string('eval_split', 'train',
                     'Which split of the dataset used for evaluation')
 
 flags.DEFINE_string('dataset_dir', data_paths.ISIC2018_SEG_TASK_DATASET, 'Where the dataset reside.')
@@ -120,7 +120,7 @@ def main(unused_argv):
          3])
     if tuple(FLAGS.eval_scales) == (1.0,):
       tf.logging.info('Performing single-scale test.')
-      predictions = model.predict_labels(samples[common.IMAGE], model_options,
+      predictions = model_func.predict_labels(samples[common.IMAGE], model_options,
                                          image_pyramid=FLAGS.image_pyramid)
     else:
       tf.logging.info('Performing multi-scale test.')
@@ -128,7 +128,7 @@ def main(unused_argv):
         raise ValueError(
             'Quantize mode is not supported with multi-scale test.')
 
-      predictions = model.predict_labels_multi_scale(
+      predictions = model_func.predict_labels_multi_scale(
           samples[common.IMAGE],
           model_options=model_options,
           eval_scales=FLAGS.eval_scales,

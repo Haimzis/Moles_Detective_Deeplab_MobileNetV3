@@ -15,7 +15,7 @@
 # ==============================================================================
 """Training script for the DeepLab model.
 
-See model.py for more details and usage.
+See model_func.py for more details and usage.
 """
 
 from __future__ import absolute_import
@@ -27,7 +27,7 @@ import tensorflow as tf
 from tensorflow.contrib import quantize as contrib_quantize
 from tensorflow.contrib import tfprof as contrib_tfprof
 import common
-import model
+import model_func
 from datasets import data_generator
 from my_utils import train_utils
 from model.slim.deployment import model_deploy
@@ -102,7 +102,7 @@ flags.DEFINE_float('base_learning_rate', .09,
 flags.DEFINE_float('decay_steps', 0.0,
                    'Decay steps for polynomial learning rate schedule.')
 
-flags.DEFINE_float('end_learning_rate', 0.0,
+flags.DEFINE_float('end_learning_rate', 0.001,
                    'End learning rate for polynomial learning rate schedule.')
 
 flags.DEFINE_float('learning_rate_decay_factor', 0.04,
@@ -149,11 +149,11 @@ flags.DEFINE_boolean('upsample_logits', True,
 # Hyper-parameters for NAS training strategy.
 
 flags.DEFINE_float(
-    'drop_path_keep_prob', 0.85,
+    'drop_path_keep_prob', 0.875,
     'Probability to keep each path in the NAS cell when training.')
 
 # Settings for fine-tuning the network.
-flags.DEFINE_string('tf_initial_checkpoint', './train_log/30_07_2020_00_40_45',
+flags.DEFINE_string('tf_initial_checkpoint', './train_log/10_09_2020_22_55_10/',
                     'The initial checkpoint in tensorflow format.')
 
 # Set to False if one does not want to re-use the trained classifier weights.
@@ -243,7 +243,7 @@ def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
         atrous_rates=FLAGS.atrous_rates,
         output_stride=FLAGS.output_stride)
 
-    outputs_to_scales_to_logits = model.multi_scale_logits(
+    outputs_to_scales_to_logits = model_func.multi_scale_logits(
         samples[common.IMAGE],
         model_options=model_options,
         image_pyramid=FLAGS.image_pyramid,
@@ -257,8 +257,8 @@ def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
 
     # Add name to graph node so we can add to summary.
     output_type_dict = outputs_to_scales_to_logits[common.OUTPUT_TYPE]
-    output_type_dict[model.MERGED_LOGITS_SCOPE] = tf.identity(
-        output_type_dict[model.MERGED_LOGITS_SCOPE], name=common.OUTPUT_TYPE)
+    output_type_dict[model_func.MERGED_LOGITS_SCOPE] = tf.identity(
+        output_type_dict[model_func.MERGED_LOGITS_SCOPE], name=common.OUTPUT_TYPE)
 
     for output, num_classes in six.iteritems(outputs_to_num_classes):
         train_utils.add_softmax_cross_entropy_loss_for_each_scale(
@@ -403,7 +403,7 @@ def main(unused_argv):
             summaries.add(tf.summary.scalar('total_loss', total_loss))
 
             # Modify the gradients for biases and last layer variables.
-            last_layers = model.get_extra_layer_scopes(
+            last_layers = model_func.get_extra_layer_scopes(
                 FLAGS.last_layers_contain_logits_only)
             grad_mult = train_utils.get_model_gradient_multipliers(
                 last_layers, FLAGS.last_layer_gradient_multiplier)

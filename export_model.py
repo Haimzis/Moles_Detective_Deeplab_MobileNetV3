@@ -21,7 +21,7 @@ from tensorflow.contrib import quantize as contrib_quantize
 from tensorflow.python.tools import freeze_graph
 import common
 import input_preprocess
-import model
+import model_func
 import my_params
 from my_utils.model_export_utils import find_most_updated_weights_file, export_model_as_tflite
 
@@ -132,7 +132,7 @@ def main(unused_argv):
 
     if tuple(FLAGS.inference_scales) == (1.0,):
       tf.logging.info('Exported model performs single-scale inference.')
-      predictions = model.predict_labels(
+      predictions = model_func.predict_labels(
           image,
           model_options=model_options,
           image_pyramid=FLAGS.image_pyramid)
@@ -141,7 +141,7 @@ def main(unused_argv):
       if FLAGS.quantize_delay_step >= 0:
         raise ValueError(
             'Quantize mode is not supported with multi-scale test.')
-      predictions = model.predict_labels_multi_scale(
+      predictions = model_func.predict_labels_multi_scale(
           image,
           model_options=model_options,
           eval_scales=FLAGS.inference_scales,
@@ -150,7 +150,7 @@ def main(unused_argv):
         tf.cast(predictions[common.OUTPUT_TYPE], tf.float32),
         _RAW_OUTPUT_NAME)
     raw_probabilities = tf.identity(
-        predictions[common.OUTPUT_TYPE + model.PROB_SUFFIX],
+        predictions[common.OUTPUT_TYPE + model_func.PROB_SUFFIX],
         _RAW_OUTPUT_PROB_NAME)
 
     # Crop the valid regions from the predictions.

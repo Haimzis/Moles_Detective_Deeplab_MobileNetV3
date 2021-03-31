@@ -19,8 +19,8 @@ import six
 import tensorflow as tf
 from tensorflow.contrib import framework as contrib_framework
 
-from core import preprocess_utils
-from core import utils
+from model.core import preprocess_utils
+from model.core import utils
 
 
 def _div_maybe_zero(total_loss, num_present):

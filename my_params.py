@@ -11,7 +11,7 @@ SEC_BETWEEN_PREDICTION = 1.5
 
 ### EXPORT MODEL ###
 EXPORT_MODEL_PATH = './deployed/MobileNet_V3_large_ISIC_ver1.pb'
-CHECKPOINT_DIR = './train_log/30_07_2020_00_40_45'
+CHECKPOINT_DIR = './train_log/10_09_2020_22_55_10'
 
 ### EXPORT TFLITE ###
 graph_def_file='./deployed/MobileNet_V3_large_ver2.pb'
