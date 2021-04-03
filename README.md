@@ -3,6 +3,14 @@ Our project uses DeepLabV3 solutions for these Tasks:
 - Semantic Segmentation - MobileNetV3.
 - Classification - InceptionV3.
 
+### ***Usage:*** 
+1. Download the source code from github
+2. Create your own Dataset directory and move it to `datasets`.
+3. Create builder for your data, look at `build_moles_detector_data.py` for example.
+4. configure `train.py` params
+5. run `train.py`
+
+### ***Our Problem Definition:*** 
 **Goal**: recognize and classify Skin lesions.  
 **Datasets**:
 
